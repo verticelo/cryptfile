@@ -14,9 +14,12 @@ Tested on:
 - OS X
 
 Installation:
+```
 chmod +x cryptfile.sh
+```
 
 Usage:
+```
 ./cryptfile.sh
 -> Will show available commands
 
@@ -34,6 +37,8 @@ Usage:
 
 ./cryptfile.sh --decrypt FILENAME.enc
 -> Decrypts FILENAME.enc to FILENAME
+
+```
 
 A password file can be placed in $HOME/cryptfile.pass. If present, that password will be used to encrypt/decrypt any provided files. Then there is no need for --pass-prompt or --pass-file. Password files must have permission 600.
 
