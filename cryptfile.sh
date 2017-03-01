@@ -19,6 +19,7 @@ VAR_FILE=""
 
 VAR_INPUTFILE=""
 VAR_OUTPUTFILE=""
+echo ""
 
 usage() {
 	echo ""
@@ -52,7 +53,6 @@ do
 			;;
 		-pp | --pass-prompt)
 			VAR_PASSWORDPROMPT=1
-			shift
 			;;
 		--encrypt)
 			VAR_ENCRYPT=1
@@ -77,12 +77,12 @@ check_passwordfile() {
 	if [[ -z "$VAR_PASSWORDFILE" ]]; then
 		VAR_PASSWORDFILE=$DEFAULT_PASSWORDFILE_PATH
 	fi
-	
+
 	if [ ! -f "$VAR_PASSWORDFILE" ]; then
 		echo "Password file ${VAR_PASSWORDFILE} could not be found"
 		exit 1
 	fi
-	
+
 	PERMISSION=`find ${VAR_PASSWORDFILE} -prune -printf '%m\n'`
 	
 	if [ $PERMISSION != "600" ]; then
@@ -100,16 +100,16 @@ check_passwordfile() {
 
 check_password() {
 	check_passwordprompt
-	
+
 	if [[ -z "$VAR_PASSWORD" ]]; then
 		check_passwordfile
 	fi
-	
+
 	if [[ -z "$VAR_PASSWORD" ]]; then
 		echo "No password provided"
 		exit 1
 	fi
-	
+
 	# Trim whitespaces
 	VAR_PASSWORD=`echo ${VAR_PASSWORD} | xargs`
 }
@@ -119,8 +119,8 @@ check_password() {
 check_password
 
 if [[ ! -f $VAR_FILE ]]; then
- echo "File not found"
- exit 1
+	echo "File not found"
+	exit 1
 fi
 
 # Extract out the directory and the file name
@@ -141,21 +141,21 @@ edit_file() {
 	echo "Storing tmp file in ${TEMP_PATH}"
 	echo $VAR_PASSWORD | gpg --passphrase-fd 0 --output $TEMP_PATH --decrypt $VAR_FILE
 	VALPRE=$(<$TEMP_PATH)
-	
+
 	nano $TEMP_PATH
 	if [[ $? -ne 0 ]]; then
 		echo "Nano exited with an error. File has not been re-encrypted. The tmp file is still available."
 		exit 1
 	fi
-	
+
 	VALPOST=$(<$TEMP_PATH)
-	
+
 	if [[ $VALPRE == $VALPOST ]]; then
 		rm -f $TEMP_PATH
 		echo "Nothing changed, hence nothing to do.. Done"
 		exit 0
 	fi
-	
+
 	VAR_INPUTFILE=$TEMP_PATH
 	VAR_OUTPUTFILE=$VAR_FILE
 	encrypt_file
