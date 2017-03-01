@@ -130,7 +130,7 @@ VAR_BASE=$(basename "${VAR_FILE}")
 require_extension() {
 	LENGTH=${#REQUIRE_EXTENSION}
 	EXTENSION=${VAR_FILE: -${LENGTH}}
-	if [[ $EXTENSION != ".enc" ]]; then
+	if [[ $EXTENSION != $REQUIRE_EXTENSION ]]; then
 		echo "Extension .enc missing on the file"
 		exit 1
 	fi
