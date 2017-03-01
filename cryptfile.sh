@@ -151,6 +151,7 @@ edit_file() {
 	VALPOST=$(<$TEMP_PATH)
 	
 	if [[ $VALPRE == $VALPOST ]]; then
+		rm -f $TEMP_PATH
 		echo "Nothing changed, hence nothing to do.. Done"
 		exit 0
 	fi
