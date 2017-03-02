@@ -192,6 +192,10 @@ elif [ "$VAR_DECRYPT" -eq 1 ]; then
 	LENGTH=${#REQUIRE_EXTENSION}
 	VAR_OUTPUTFILE=${VAR_FILE::-${LENGTH}}
 	decrypt_file
+	if [[ $? -ne 0 ]]; then
+        	echo "A problem occured decrypting the file"
+        	exit 1
+	fi
 	echo "File decrypted. Done."
 	exit 0
 fi
