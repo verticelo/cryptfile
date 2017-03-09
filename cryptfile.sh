@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 readonly VERSION='1.0'
 
