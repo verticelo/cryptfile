@@ -5,7 +5,7 @@ readonly VERSION='1.0'
 
 readonly DEFAULT_PASSWORDFILE_PATH="${HOME}/cryptfile.pass"
 
-readonly TEMP_PATH="/dev/shm/cryptfile${RANDOM}"
+readonly TEMP_PATH="${HOME}/cryptfile${RANDOM}"
 
 readonly REQUIRE_EXTENSION=".enc"
 
@@ -84,7 +84,15 @@ check_passwordfile() {
 		exit 1
 	fi
 
-	PERMISSION=`find ${VAR_PASSWORDFILE} -prune -printf '%m\n'`
+	if [[ "$OSTYPE" == "linux-gnu" ]]; then
+	    PERMISSION=`find ${VAR_PASSWORDFILE} -prune -printf '%m\n'`
+	elif [[ "$OSTYPE" == "darwin"* ]]; then
+	    PERMISSION=`stat -f %p ${VAR_PASSWORDFILE}`
+	    PERMISSION=${PERMISSION: -3}
+	else
+	    echo "You are running an unknown OS."
+	    exit
+	fi
 	
 	if [ $PERMISSION != "600" ]; then
 		echo "Incorrect permissions on password file. Set them to 600";
@@ -140,7 +148,7 @@ require_extension() {
 edit_file() {
 	require_extension
 	echo "Storing tmp file in ${TEMP_PATH}"
-	echo $VAR_PASSWORD | gpg --passphrase-fd 0 --output $TEMP_PATH --decrypt $VAR_FILE
+	echo $VAR_PASSWORD | gpg --passphrase-fd 0 --batch --output $TEMP_PATH --decrypt $VAR_FILE
 	VALPRE=$(<$TEMP_PATH)
 
 	nano $TEMP_PATH
