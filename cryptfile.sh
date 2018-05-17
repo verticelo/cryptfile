@@ -183,7 +183,7 @@ encrypt_file() {
 }
 
 decrypt_file() {
-	echo $VAR_PASSWORD | gpg --passphrase-fd 0 --output $VAR_OUTPUTFILE --decrypt $VAR_INPUTFILE
+	echo $VAR_PASSWORD | gpg --passphrase-fd 0 --output $VAR_OUTPUTFILE --batch --decrypt $VAR_INPUTFILE
 }
 
 if [ "$VAR_ENCRYPT" -eq 0 ] && [ "$VAR_DECRYPT" -eq 0 ]; then
